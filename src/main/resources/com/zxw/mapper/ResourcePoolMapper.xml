@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zxw.mapper.ResourcePoolMapper">
+  <resultMap id="BaseResultMap" type="com.zxw.pojo.ResourcePool">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="kind" jdbcType="VARCHAR" property="kind" />
+    <result column="host" jdbcType="VARCHAR" property="host" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="cpu_limit" jdbcType="INTEGER" property="cpuLimit" />
+    <result column="cpu_used" jdbcType="INTEGER" property="cpuUsed" />
+    <result column="memory_limit" jdbcType="INTEGER" property="memoryLimit" />
+    <result column="memory_used" jdbcType="INTEGER" property="memoryUsed" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+
+<!--  <select id="getAll" resultType="com.zxw.pojo.ResourcePool">-->
+<!--SELECT * FROM resource_pool-->
+<!--        </select>-->
+
+  <select id="getAll" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from resource_pool
+  </select>
+
+
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, type, kind, host, status, cpu_limit, cpu_used, memory_limit, memory_used, create_time,
+    update_time
+  </sql>
+
+  <select id="selectByExample" parameterType="com.zxw.pojo.ResourcePoolExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from resource_pool
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from resource_pool
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectByType" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from resource_pool
+    where type = #{type ,jdbcType=INTEGER}
+  </select>
+
+  <select id="getByCreateDate" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from resource_pool
+    where DATE_FORMAT(create_time,'%Y-%m-%d')=#{Stoday}
+  </select>
+
+  <select id="getByUpdateDate" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from resource_pool
+    where DATE_FORMAT(update_time,'%Y-%m-%d')=#{Stoday}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from resource_pool
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.zxw.pojo.ResourcePoolExample">
+    delete from resource_pool
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.zxw.pojo.ResourcePool">
+    insert into resource_pool (id, type, kind,
+      host, status, cpu_limit,
+      cpu_used, memory_limit, memory_used,
+      create_time, update_time)
+    values (#{id,jdbcType=BIGINT}, #{type,jdbcType=INTEGER}, #{kind,jdbcType=VARCHAR},
+      #{host,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{cpuLimit,jdbcType=INTEGER},
+      #{cpuUsed,jdbcType=INTEGER}, #{memoryLimit,jdbcType=INTEGER}, #{memoryUsed,jdbcType=INTEGER},
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+
+
+  <insert id="insertSelective" parameterType="com.zxw.pojo.ResourcePool" >
+
+    insert into resource_pool
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="kind != null">
+        kind,
+      </if>
+      <if test="host != null">
+        host,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="cpuLimit != null">
+        cpu_limit,
+      </if>
+      <if test="cpuUsed != null">
+        cpu_used,
+      </if>
+      <if test="memoryLimit != null">
+        memory_limit,
+      </if>
+      <if test="memoryUsed != null">
+        memory_used,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="kind != null">
+        #{kind,jdbcType=VARCHAR},
+      </if>
+      <if test="host != null">
+        #{host,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="cpuLimit != null">
+        #{cpuLimit,jdbcType=INTEGER},
+      </if>
+      <if test="cpuUsed != null">
+        #{cpuUsed,jdbcType=INTEGER},
+      </if>
+      <if test="memoryLimit != null">
+        #{memoryLimit,jdbcType=INTEGER},
+      </if>
+      <if test="memoryUsed != null">
+        #{memoryUsed,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+
+
+  <select id="countByExample" parameterType="com.zxw.pojo.ResourcePoolExample" resultType="java.lang.Long">
+    select count(*) from resource_pool
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+
+  <update id="updateByExampleSelective" parameterType="map">
+    update resource_pool
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.type != null">
+        type = #{record.type,jdbcType=INTEGER},
+      </if>
+      <if test="record.kind != null">
+        kind = #{record.kind,jdbcType=VARCHAR},
+      </if>
+      <if test="record.host != null">
+        host = #{record.host,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null">
+        status = #{record.status,jdbcType=TINYINT},
+      </if>
+      <if test="record.cpuLimit != null">
+        cpu_limit = #{record.cpuLimit,jdbcType=INTEGER},
+      </if>
+      <if test="record.cpuUsed != null">
+        cpu_used = #{record.cpuUsed,jdbcType=INTEGER},
+      </if>
+      <if test="record.memoryLimit != null">
+        memory_limit = #{record.memoryLimit,jdbcType=INTEGER},
+      </if>
+      <if test="record.memoryUsed != null">
+        memory_used = #{record.memoryUsed,jdbcType=INTEGER},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+
+
+  <update id="updateByExample" parameterType="map">
+    update resource_pool
+    set id = #{record.id,jdbcType=BIGINT},
+      type = #{record.type,jdbcType=INTEGER},
+      kind = #{record.kind,jdbcType=VARCHAR},
+      host = #{record.host,jdbcType=VARCHAR},
+      status = #{record.status,jdbcType=TINYINT},
+      cpu_limit = #{record.cpuLimit,jdbcType=INTEGER},
+      cpu_used = #{record.cpuUsed,jdbcType=INTEGER},
+      memory_limit = #{record.memoryLimit,jdbcType=INTEGER},
+      memory_used = #{record.memoryUsed,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.zxw.pojo.ResourcePool">
+    update resource_pool
+    <set>
+      <if test="type != null">
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="kind != null">
+        kind = #{kind,jdbcType=VARCHAR},
+      </if>
+      <if test="host != null">
+        host = #{host,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="cpuLimit != null">
+        cpu_limit = #{cpuLimit,jdbcType=INTEGER},
+      </if>
+      <if test="cpuUsed != null">
+        cpu_used = #{cpuUsed,jdbcType=INTEGER},
+      </if>
+      <if test="memoryLimit != null">
+        memory_limit = #{memoryLimit,jdbcType=INTEGER},
+      </if>
+      <if test="memoryUsed != null">
+        memory_used = #{memoryUsed,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+
+  <update id="updateByPrimaryKey" parameterType="com.zxw.pojo.ResourcePool">
+    update resource_pool
+    set type = #{type,jdbcType=INTEGER},
+      kind = #{kind,jdbcType=VARCHAR},
+      host = #{host,jdbcType=VARCHAR},
+      status = #{status,jdbcType=TINYINT},
+      cpu_limit = #{cpuLimit,jdbcType=INTEGER},
+      cpu_used = #{cpuUsed,jdbcType=INTEGER},
+      memory_limit = #{memoryLimit,jdbcType=INTEGER},
+      memory_used = #{memoryUsed,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
